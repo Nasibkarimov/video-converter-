@@ -1,0 +1,219 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: #f8fafc;
+}
+
+.card {
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 35px;
+    width: 100%;
+    max-width: 580px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.lang-container select {
+    background: #0f172a;
+    color: #38bdf8;
+    border: 1px solid #334155;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+}
+
+.platform-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.platform-btn {
+    flex: 1;
+    padding: 12px;
+    background: #0f172a;
+    border: 2px solid #334155;
+    color: #94a3b8;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.platform-btn.active[data-platform="youtube"] {
+    background: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+}
+
+.platform-btn.active[data-platform="tiktok"] {
+    background: linear-gradient(45deg, #25f4ee, #fe2c55);
+    color: #ffffff;
+    border-color: #fe2c55;
+    box-shadow: 0 4px 14px rgba(254, 44, 85, 0.4);
+}
+
+.subtitle {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 16px 20px;
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #38bdf8;
+}
+
+.format-options {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.format-btn {
+    flex: 1;
+    padding: 12px;
+    background: #0f172a;
+    border: 2px solid #334155;
+    color: #94a3b8;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.format-btn.active {
+    background: #38bdf8;
+    color: #0f172a;
+    border-color: #38bdf8;
+}
+
+.quality-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    background: #0f172a;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 2px solid #334155;
+}
+
+.quality-group label {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.quality-group select {
+    background: transparent;
+    color: #38bdf8;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    outline: none;
+    cursor: pointer;
+}
+
+.quality-group select option {
+    background: #0f172a;
+    color: #fff;
+}
+
+#convertBtn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(to right, #22c55e, #16a34a);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+#convertBtn:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+}
+
+#convertBtn:disabled {
+    background: #475569;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.status-area {
+    margin-top: 24px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.status-success { color: #4ade80; }
+.status-error { color: #f87171; }
+.status-loading { color: #38bdf8; }
+
+.download-link-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 14px 28px;
+    background: #38bdf8;
+    color: #0f172a;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 700;
+    transition: background 0.3s;
+}
+
+.download-link-btn:hover { background: #7dd3fc; }
