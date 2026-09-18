@@ -17,7 +17,6 @@ if (!fs.existsSync(downloadsDir)) {
     fs.mkdirSync(downloadsDir, { recursive: true });
 }
 
-// Əməliyyat sisteminə uyğun yt-dlp və ffmpeg yollarının təyini
 const isWin = process.platform === 'win32';
 const ytdlpPath = isWin ? path.join(__dirname, 'yt-dlp.exe') : path.join(__dirname, 'bin', 'yt-dlp');
 const ffmpegLoc = isWin ? __dirname : path.join(__dirname, 'bin');
@@ -34,9 +33,16 @@ app.post('/api/convert', (req, res) => {
 
     const execOptions = { maxBuffer: 1024 * 1024 * 100 };
 
-    execFile(ytdlpPath, ['--get-title', '--no-warnings', url], execOptions, (titleErr, stdout) => {
-        const videoTitle = stdout ? stdout.trim() : 'Downloaded Media';
-        let args = ['--no-progress', '--no-warnings'];
+    // Bulud serverlərinin (Render) IP bloğunu keçmək üçün tənzimləmə
+    const commonArgs = [
+        '--no-progress',
+        '--no-warnings',
+        '--extractor-args', 'youtube:player_client=android,web'
+    ];
+
+    execFile(ytdlpPath, ['--get-title', ...commonArgs, url], execOptions, (titleErr, stdout) => {
+        const videoTitle = stdout ? stdout.trim() : (platform === 'tiktok' ? 'TikTok Video' : 'Downloaded Media');
+        let args = [...commonArgs];
 
         if (platform === 'tiktok') {
             if (format === 'mp3') {
@@ -57,10 +63,14 @@ app.post('/api/convert', (req, res) => {
             }
         }
 
-        execFile(ytdlpPath, args, execOptions, (dlErr) => {
+        console.log(`Yükləmə başladı [${platform || 'youtube'}]:`, url);
+
+        execFile(ytdlpPath, args, execOptions, (dlErr, dlStdout, dlStderr) => {
             if (dlErr) {
+                console.error('yt-dlp Render Error:', dlStderr || dlErr.message);
                 return res.status(500).json({ success: false, message: 'Fayl yüklənərkən xəta baş verdi.' });
             }
+
             return res.json({ success: true, title: videoTitle, downloadUrl: `/downloads/${filename}` });
         });
     });
