@@ -27,46 +27,46 @@ app.post('/api/convert', async (req, res) => {
     if (!url) return res.status(400).json({ success: false, message: 'Keçid daxil edilməyib.' });
     if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
 
-    const ext = format === 'mp3' ? 'mp3' : 'mp4';
-    const filename = `media_${Date.now()}.${ext}`;
-    const outputPath = path.join(downloadsDir, filename);
-
-    // --- TIKTOK ÜÇÜN DÖZÜMLÜ API HƏLLİ ---
+    // --- TIKTOK ÜÇÜN BLOKSUZ BİRBAŞA KEÇİD HƏLLİ ---
     if (platform === 'tiktok' || url.includes('tiktok.com')) {
         try {
             const apiUrl = `https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`;
             
             const apiRes = await fetch(apiUrl, {
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                 }
             });
 
             const json = await apiRes.json();
 
             if (json.code === 0 && json.data) {
-                const downloadMediaUrl = format === 'mp3' ? json.data.music : json.data.play;
+                let directMediaUrl = format === 'mp3' ? json.data.music : json.data.play;
                 const title = json.data.title || 'TikTok Video';
 
-                const mediaRes = await fetch(downloadMediaUrl);
-                const arrayBuffer = await mediaRes.arrayBuffer();
-                fs.writeFileSync(outputPath, Buffer.from(arrayBuffer));
+                if (directMediaUrl && !directMediaUrl.startsWith('http')) {
+                    directMediaUrl = 'https://www.tikwm.com' + directMediaUrl;
+                }
 
                 return res.json({
                     success: true,
                     title: title,
-                    downloadUrl: `/downloads/${filename}`
+                    downloadUrl: directMediaUrl
                 });
             } else {
-                return res.status(500).json({ success: false, message: 'TikTok keçidi emal edilə bilmədi.' });
+                return res.status(500).json({ success: false, message: 'TikTok keçidi analiz edilə bilmədi.' });
             }
         } catch (err) {
             console.error('TikTok Error:', err);
-            return res.status(500).json({ success: false, message: 'TikTok yükləmə xətası baş verdi.' });
+            return res.status(500).json({ success: false, message: 'TikTok xidməti cavab vermədi.' });
         }
     }
 
-    // --- YOUTUBE ÜÇÜN YT-DLP HƏLLİ ---
+    // --- YOUTUBE ÜÇÜN HƏLL ---
+    const ext = format === 'mp3' ? 'mp3' : 'mp4';
+    const filename = `media_${Date.now()}.${ext}`;
+    const outputPath = path.join(downloadsDir, filename);
+
     const execOptions = { maxBuffer: 1024 * 1024 * 100 };
     const commonArgs = ['--no-progress', '--no-warnings', '--extractor-args', 'youtube:player_client=android,web'];
 
